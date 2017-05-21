@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_volley"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.syl.basicsummary.activity.VolleyActivity">
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="match_parent">
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:orientation="vertical">
+            <Button android:id="@+id/btn_StringRequest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="StringRequest"/>
+            <Button android:id="@+id/btn_JsonObjectRequest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="JsonObjectRequest"/>
+            <Button android:id="@+id/btn_JsonArrayRequest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="JsonArrayRequest"/>
+            <Button android:id="@+id/btn_ImageRequest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ImageRequest"/>
+            <ImageView android:id="@+id/img"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:scaleType="fitCenter"/>
+            <TextView android:id="@+id/tv"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:scrollbars="vertical"
+                      android:singleLine="false"/>
+            <WebView android:id="@+id/webView"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"></WebView>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">ViewDemo</string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
+    <string-array name="planets_array">
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Neptune</item>
+    </string-array>
+    <string-array name="titles_array">
+        <item>抽屉菜单DrawerLayout</item>
+    </string-array>
+    <string name="action_websearch">Web search</string>
+    <string name="app_not_available">Sorry, there\'s no web browser available</string>
+    <string name="item_drawer_layout">抽屉菜单</string>
+    <string name="item_view_pager">viewPager</string>
+    <string name="item_okhttp">okHttp</string>
+    <string name="btn_https_get">btn_https_get</string>
+    <string name="btn_https_get2">btn_https_get2</string>
+    <string name="item_img">图片</string>
+    <string name="btn_img">加载图片</string>
+    <string name="item_draw_img">画图</string>
+    <string name="btn_draw_img1">画圆</string>
+    <string name="btn_draw_img2">矩形</string>
+    <string name="btn_draw_img3">椭圆</string>
+    <string name="btn_draw_img4">扇形</string>
+    <string name="item_wave">波浪</string>
+    <string name="btn_https_get3">https_get_okhttp</string>
+    <string name="btn_draw_img5">贝塞尔曲线</string>
+    <string name="btn_draw_img6">贝塞尔曲线2</string>
+    <string name="item_bezier">bezier曲线</string>
+</resources>

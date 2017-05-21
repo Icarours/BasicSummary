@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/item_drawer_layout"
+          android:showAsAction="ifRoom|withText"
+          android:title="@string/item_drawer_layout"
+    />
+    <item android:id="@+id/item_view_pager"
+          android:showAsAction="ifRoom|withText"
+          android:title="@string/item_view_pager"
+    />
+    <item android:id="@+id/item_okhttp"
+          android:showAsAction="ifRoom|withText"
+          android:title="@string/item_okhttp"
+    />
+    <item android:id="@+id/item_img"
+          android:showAsAction="ifRoom|withText"
+          android:title="@string/item_img"
+    />
+    <item android:id="@+id/item_draw_img"
+          android:showAsAction="ifRoom|withText"
+          android:title="@string/item_draw_img"
+    />
+    <item android:id="@+id/item_wave"
+          android:showAsAction="ifRoom|withText"
+          android:title="@string/item_wave"
+    />
+    <item android:id="@+id/item_bezier"
+          android:showAsAction="ifRoom|withText"
+          android:title="@string/item_bezier"
+    />
+</menu>

@@ -1,0 +1,27 @@
+1.    <com.syl.commonactivity.view.VariedImageView
+          android:id="@+id/viv_variedImageView"
+          android:layout_width="300px"
+          android:layout_height="300px"
+          android:src="@mipmap/m1"
+          app:borderThick="5dp"
+          app:borderColor="#ffff0000"
+          app:borderOverlay="true"/>
+
+
+2.
+        VariedImageView mViv = (VariedImageView) findViewById(R.id.viv);
+
+3.
+        mViv.setBorderOverlay(false);
+        mViv.setBorderThick(10);
+        mViv.setBorderColor(Color.BLUE);
+
+4.
+          VariedImageView variedImageView=new VariedImageView(this);
+          variedImageView.setBorderThick(10);
+          variedImageView.setBorderColor(Color.BLUE);
+          variedImageView.setBorderOverlay(false);
+          variedImageView.setImageResource(R.mipmap.mm2);
+          variedImageView.refresh();
+
+

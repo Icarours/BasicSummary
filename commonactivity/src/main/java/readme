@@ -1,0 +1,118 @@
+使用mvc设计模式,最大限度的解耦
+
+具体内容又由Fragment展示
+
+要添加新的知识点,只需要在Constants中添加条目名称,在FragmentFactory中新增BaseFragment即可
+
+
+============================================
+1.存放到公共文件下
+File file = new File("/mnt/sdcard","info.txt");
+File file = new File(Environment.getExternalStorageDirectory(),"info.txt");
+
+2.存储到私有文件(缓存文件夹)下
+File file = new File("/data/data/com.itheima.qqlogin/info.txt");
+File file = new File(getFilesDir(),"info.txt");
+
+
+
+使用xml文件保存信息
+        //文件的保存地址  /data/data/包名/files/qiqi.xml
+        File file = new File(getActivity().getFilesDir(), user + ".xml");
+
+
+文件的存储位置
+File file = new File("/mnt/sdcard","info.txt");
+File file = new File(Environment.getExternalStorageDirectory(),"info.txt");
+
+File file = new File("/data/data/com.itheima.qqlogin/info.txt");
+File file = new File(getFilesDir(),"info.txt");
+
+//文件的保存地址  /data/data/包名/files/qiqi.xml
+File file = new File(getActivity().getFilesDir(), user + ".xml");
+
+========================================
+常见的对话框
+普通对话框
+单选对话框
+多选对话框
+进度对话框(带进度条)
+进度对话框(不带带进度条)
+日期对话框
+时间对话框
+
+============================================
+Service
+用途
+Service就是一个长期在后台运行的组件, 一般 用来 做一些 看不见的操作 ...
+例如:　
+１．　轮询操作．．．　经常去定时连接一下服务器，尝试获得最新的数据．．．
+２．　在后台　去检测下　ｕｓｂ端口是否插入了设备．．
+
+Service的生命周期
+1. 服务只会被创建一次, 创建后, 就一直在后台运行
+2. 服务只能够销毁一次,重复点击停止服务,并不会 重新销毁服务..
+3. 重复开启服务,只会去重复调用 onStartCommand,并不会重新创建服务..
+4. 如果因为内存不够 ,系统把服务 所在 进程回收了, 那么会在内存充足的时候,再 次重启服务..
+
+开启服务:服务可以一直在后台运行,
+绑定服务: 绑定服务可以调用服务中的方法.
+
+所以,如果要想一个服务既在后台长期运行,并且也可以去调用到服务中方法, 那么就会使用到混合开启 服务的模式的.
+
+
+service需要注意的地方:
+Service解绑之后要将mNeiXian置为空,否则,依然可以通过mNeiXian调用TestService中的方法
+
+=========================================================
+BroadcastReceiver
+广播是分为 有序广播和无序广播的,
+
+有序的广播:可以　指定先后的接收者的顺序，　并且可以终止广播发送给下个接收者．　并且还可以修改广播的数据
+无序的广播：不可以指定最终的接收者，也不可以修改数据．．．　不能够终止　
+
+动态注册和静态注册
+
+========================================
+Activity, service, broadCastReceiver, contentProvider
+
+activity是带界面的... 如果你要开发多个界面,就需要有个 activity..
+
+Service是不带界面的... 后台运行的...
+
+BroadCastReceiver (广播接收者 )
+
+
+这里的 4 大组件,都需要到 清单文件中进行 注册, 否则用不了..
+4 大组件激活的时候, 一般都是使用 intent
+
+
+
+==========================================
+Android中进程优先级:
+1.前台进程： foreground process:
+当前的应用程序用户可以直接与其进行交互... 获得焦点
+2.可视进程: visible process:
+用户可以看得到,但是不能直接与其进行交互
+3.服务进程: service process
+包含有 服务组件,并且一直在后台运行着..
+4.后台进程: background process
+就类似于 你启动了某个应用程序,然后 直接点击 最小化. --- activity. ...
+5.空进程: empty process
+进程中, 没有 activity, 也没有service ...
+
+前台进程> 可视进程> 服务进程> 后台进程> 空进程
+
+当android系统发现 内存不够用的时候, 优先会去 回收 优先级低的进程占用的内存 ...
+
+
+
+==========================================
+遇到的问题:
+1.FragmentFactory中的mFragmentCache忘了初始化,导致出现空指针.引用数据类型一定要进行初始化操作
+2.在清单文件中配置的固定方向属性,子类Activity不能继承
+3.ListView的Item布局中list_item_template.xml最好不要规定宽高,宽高都用match_parent
+
+
+
+

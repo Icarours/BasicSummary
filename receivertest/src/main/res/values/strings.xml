@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">RecevierTest</string>
+    <string name="btn_my_receiver">发送自定义广播</string>
+</resources>

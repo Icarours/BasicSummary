@@ -1,0 +1,434 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Android--Apache HttpClient - 承香墨影 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=03KQeESEmpLfzDqUo0NiWUg5Zd5aRam3JHBZTK05Wug1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="/skins/BOOK/bundle-BOOK.css?v=fWz3cvIoU0CG8iD-sCmV803XvYIy-SbgoBMZsoVHw9M1"/>
+<link type="text/css" rel="stylesheet" href="/blog/customcss/141671.css?v=VtHXOFoVU8tt1Cv6titR4brarMY%3d"/>
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="/skins/BOOK/bundle-BOOK-mobile.css?v=MhWr5ier3FSFZmgxX3ZexpNsJVxs7Q72CJ8dMkgJT601"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/plokmju/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/plokmju/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/plokmju/wlwmanifest.xml"/>
+<script src="//common.cnblogs.com/script/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'plokmju', cb_enable_mathjax=false;var isLogined=true;</script>
+<script src="/bundles/blog-common.js?v=VojbxZmhS6OYu7vtmoh-qH-fKxvq6c_Pb2g8lij19701" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<script type="text/javascript">
+	try {
+		if (screen.availWidth > 1200) {
+			document.getElementById("MainCss").href = '/Skins/BOOK/style2.css';
+		}
+	} catch (e) { }
+</script>
+
+<div id="header">
+<div id="HeaderTitle">
+<div id="Title">
+<a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/plokmju/">承香墨影</a>
+</div>
+<div id="subTitle"></div>
+</div>
+</div>
+
+<div id="main">
+	
+<div id="post_detail">
+	<div class="post">
+		<h2>
+			<a id="cb_post_title_url" href="http://www.cnblogs.com/plokmju/p/Android_apacheHttpClient.html">Android--Apache HttpClient</a>
+		</h2>
+		<div id="cnblogs_post_body"><p><strong>前言</strong></p>
+<p>　　上一篇文章介绍了使用HttpURLConnection来完成对于HTTP协议的支持。现在介绍一个新的方式来访问Web站点，那就是HttpClient。</p>
+<p>　　HttpClient是Apache开源组织提供的一个开源的项目，从名字上就可以看出，它是一个简单的HTTP客户端（并不是浏览器），可以发送HTTP请求，接受HTTP响应。但是不会缓存服务器的响应，不能执行HTTP页面中签入嵌入的JS代码，自然也不会对页面内容进行任何解析、处理，这些都是需要开发人员来完成的。</p>
+<p>　　现在Android已经成功集成了HttpClient，所以开发人员在Android项目中可以直接使用HttpClient来想Web站点提交请求以及接受响应，如果使用其他的Java项目，需要引入进相应的Jar包。<a href="http://hc.apache.org/downloads.cgi">HttpClient可以在官网上下载</a>。</p>
+<p>　　</p>
+<p><strong>HttpClient</strong></p>
+<p>　　HttpClient其实是一个interface类型，HttpClient封装了对象需要执行的Http请求、身份验证、连接管理和其它特性。从文档上看，HttpClient有三个已知的实现类分别是：AbstractHttpClient,&nbsp;AndroidHttpClient,&nbsp;DefaultHttpClient，会发现有一个专门为Android应用准备的实现类AndroidHttpClient，当然使用常规的DefaultHttpClient也可以实现功能，但是既然开发的是Android应用程序，还是使用Android专有的实现类，一定有其优势。</p>
+<p>　　从两个类包所有在位置就可以看出区别，AndroidHttpClient定义在android.net.http.AndroidHttpClient包下，属于Android原生的http访问，而DefaultHttpClient定义在org.apache.http.impl.client.DefaultHttpClient包下，属于对apche项目的支持。而AndroidHttpClient没有公开的构造函数，只能通过静态方法newInstance()方法来获得AndroidHttpClient对象。</p>
+<p>　　AndroidHttpClient对于DefaultHttpClient做了一些改进，使其更使用用于Android项目：</p>
+<ol>
+<li>关掉过期检查，自连接可以打破所有的时间限制。</li>
+<li>可以设置ConnectionTimeOut（连接超时）和SoTimeout（读取数据超时）。</li>
+<li>关掉重定向。</li>
+<li>使用一个Session缓冲用于SSL Sockets。</li>
+<li>如果服务器支持，使用gzip压缩方式用于在服务端和客户端传递的数据。</li>
+<li>默认情况下不保留Cookie。　　　　</li>
+</ol>
+<p>　　简单来说，用HttpClient发送请求、接收响应都很简单，只需要几个步骤即可：</p>
+<ol>
+<li>创建HttpClient对象。</li>
+<li>创建对应的发送请求的对象，如果需要发送GET请求，则创建HttpGet对象，如果需要发送POST请求，则创建HttpPost对象。</li>
+<li>对于发送请求的参数，GET和POST使用的方式不同，GET方式可以使用拼接字符串的方式，把参数拼接在URL结尾；POST方式需要使用setEntity(HttpEntity entity)方法来设置请求参数。</li>
+<li>调用HttpClient对象的execute（HttpUriRequest request）发送请求，执行该方法返回一个HttpResponse对象。</li>
+<li>调用HttpResponse的对应方法获取服务器的响应头、响应内容等。</li>
+</ol>
+<p><strong>DefaultHttpClient</strong></p>
+<p>　　先看看使用DefaultHttpClient方式发送Web站点请求，上面已经简要说明了步骤，在这里简要说明一个参数的传递问题，对于GET方式，只需要拼接字符串就在URL结尾即可，但是对于POST方式，需要传递HttpEntity对象，HttpEntity为一个接口，有多个实现类，可以使用其间接子继承，UrlEncodedFormEntity类来保存请求参数，并传递给HttpPost。</p>
+<p>　　此例子简单实现了在Android客户端使用DefaultHttpClient实现一个Http站点登陆的实现，使用的是POST传递，其传递值只需要传递username+password即可，当传递的数据为admin+123则认为登陆成功。Web站点使用.net的架构，一个一般处理程序，简单的比对账户密码，这里就不在此讲解。</p>
+<p>　　因为Android4.0之后对使用网络有特殊要求，已经无法再在主线程中访问网络了，必须使用多线程访问的模式，其他的一些信息在代码注释中已经说明。</p>
+<p>&nbsp;DefaultHttpClient-Code</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">  1</span> <span style="color: #0000ff;">package</span><span style="color: #000000;"> com.bgxt.httpUtils;
+</span><span style="color: #008080;">  2</span> 
+<span style="color: #008080;">  3</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.ByteArrayOutputStream;
+</span><span style="color: #008080;">  4</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+</span><span style="color: #008080;">  5</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.InputStream;
+</span><span style="color: #008080;">  6</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.UnsupportedEncodingException;
+</span><span style="color: #008080;">  7</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ArrayList;
+</span><span style="color: #008080;">  8</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.HashMap;
+</span><span style="color: #008080;">  9</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+</span><span style="color: #008080;"> 10</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Map;
+</span><span style="color: #008080;"> 11</span> 
+<span style="color: #008080;"> 12</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.http.HttpResponse;
+</span><span style="color: #008080;"> 13</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.http.NameValuePair;
+</span><span style="color: #008080;"> 14</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.http.client.ClientProtocolException;
+</span><span style="color: #008080;"> 15</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.http.client.entity.UrlEncodedFormEntity;
+</span><span style="color: #008080;"> 16</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.http.client.methods.HttpPost;
+</span><span style="color: #008080;"> 17</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.http.impl.client.DefaultHttpClient;
+</span><span style="color: #008080;"> 18</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.http.message.BasicNameValuePair;
+</span><span style="color: #008080;"> 19</span> 
+<span style="color: #008080;"> 20</span> <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> httpClientUtils <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Runnable {
+</span><span style="color: #008080;"> 21</span>     <span style="color: #008000;">/**</span>
+<span style="color: #008080;"> 22</span> <span style="color: #008000;">     * 对于Android4.0之上的环境下，不能在主线程中访问网络 所以这里另新建了一个实现了Runnable接口的Http访问类
+</span><span style="color: #008080;"> 23</span>      <span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 24</span>     <span style="color: #0000ff;">private</span><span style="color: #000000;"> String username;
+</span><span style="color: #008080;"> 25</span>     <span style="color: #0000ff;">private</span><span style="color: #000000;"> String password;
+</span><span style="color: #008080;"> 26</span> 
+<span style="color: #008080;"> 27</span>     <span style="color: #0000ff;">public</span><span style="color: #000000;"> httpClientUtils(String username, String password) {
+</span><span style="color: #008080;"> 28</span>         <span style="color: #008000;">//</span><span style="color: #008000;"> 初始化用户名和密码</span>
+<span style="color: #008080;"> 29</span>         <span style="color: #0000ff;">this</span>.username =<span style="color: #000000;"> username;
+</span><span style="color: #008080;"> 30</span>         <span style="color: #0000ff;">this</span>.password =<span style="color: #000000;"> password;
+</span><span style="color: #008080;"> 31</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 32</span> 
+<span style="color: #008080;"> 33</span> <span style="color: #000000;">    @Override
+</span><span style="color: #008080;"> 34</span>     <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+</span><span style="color: #008080;"> 35</span>         <span style="color: #008000;">//</span><span style="color: #008000;"> 设置访问的Web站点</span>
+<span style="color: #008080;"> 36</span>         String path = "http://192.168.1.103:1231/loginas.ashx"<span style="color: #000000;">;
+</span><span style="color: #008080;"> 37</span>         <span style="color: #008000;">//</span><span style="color: #008000;"> 设置Http请求参数</span>
+<span style="color: #008080;"> 38</span>         Map&lt;String, String&gt; params = <span style="color: #0000ff;">new</span> HashMap&lt;String, String&gt;<span style="color: #000000;">();
+</span><span style="color: #008080;"> 39</span>         params.put("username"<span style="color: #000000;">, username);
+</span><span style="color: #008080;"> 40</span>         params.put("password"<span style="color: #000000;">, password);
+</span><span style="color: #008080;"> 41</span> 
+<span style="color: #008080;"> 42</span>         String result = sendHttpClientPost(path, params, "utf-8"<span style="color: #000000;">);
+</span><span style="color: #008080;"> 43</span>         <span style="color: #008000;">//</span><span style="color: #008000;"> 把返回的接口输出</span>
+<span style="color: #008080;"> 44</span> <span style="color: #000000;">        System.out.println(result);
+</span><span style="color: #008080;"> 45</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 46</span> 
+<span style="color: #008080;"> 47</span>     <span style="color: #008000;">/**</span>
+<span style="color: #008080;"> 48</span> <span style="color: #008000;">     * 发送Http请求到Web站点
+</span><span style="color: #008080;"> 49</span> <span style="color: #008000;">     * 
+</span><span style="color: #008080;"> 50</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> path
+</span><span style="color: #008080;"> 51</span> <span style="color: #008000;">     *            Web站点请求地址
+</span><span style="color: #008080;"> 52</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> map
+</span><span style="color: #008080;"> 53</span> <span style="color: #008000;">     *            Http请求参数
+</span><span style="color: #008080;"> 54</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> encode
+</span><span style="color: #008080;"> 55</span> <span style="color: #008000;">     *            编码格式
+</span><span style="color: #008080;"> 56</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@return</span><span style="color: #008000;"> Web站点响应的字符串
+</span><span style="color: #008080;"> 57</span>      <span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 58</span>     <span style="color: #0000ff;">private</span> String sendHttpClientPost(String path, Map&lt;String, String&gt;<span style="color: #000000;"> map,
+</span><span style="color: #008080;"> 59</span> <span style="color: #000000;">            String encode) {
+</span><span style="color: #008080;"> 60</span>         List&lt;NameValuePair&gt; list = <span style="color: #0000ff;">new</span> ArrayList&lt;NameValuePair&gt;<span style="color: #000000;">();
+</span><span style="color: #008080;"> 61</span>         <span style="color: #0000ff;">if</span> (map != <span style="color: #0000ff;">null</span> &amp;&amp; !<span style="color: #000000;">map.isEmpty()) {
+</span><span style="color: #008080;"> 62</span>             <span style="color: #0000ff;">for</span> (Map.Entry&lt;String, String&gt;<span style="color: #000000;"> entry : map.entrySet()) {
+</span><span style="color: #008080;"> 63</span>                 <span style="color: #008000;">//</span><span style="color: #008000;"> 解析Map传递的参数，使用一个键值对对象BasicNameValuePair保存。</span>
+<span style="color: #008080;"> 64</span>                 list.add(<span style="color: #0000ff;">new</span><span style="color: #000000;"> BasicNameValuePair(entry.getKey(), entry
+</span><span style="color: #008080;"> 65</span> <span style="color: #000000;">                        .getValue()));
+</span><span style="color: #008080;"> 66</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;"> 67</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 68</span>         <span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+</span><span style="color: #008080;"> 69</span>             <span style="color: #008000;">//</span><span style="color: #008000;"> 实现将请求 的参数封装封装到HttpEntity中。</span>
+<span style="color: #008080;"> 70</span>             UrlEncodedFormEntity entity = <span style="color: #0000ff;">new</span><span style="color: #000000;"> UrlEncodedFormEntity(list, encode);
+</span><span style="color: #008080;"> 71</span>             <span style="color: #008000;">//</span><span style="color: #008000;"> 使用HttpPost请求方式</span>
+<span style="color: #008080;"> 72</span>             HttpPost httpPost = <span style="color: #0000ff;">new</span><span style="color: #000000;"> HttpPost(path);
+</span><span style="color: #008080;"> 73</span>             <span style="color: #008000;">//</span><span style="color: #008000;"> 设置请求参数到Form中。</span>
+<span style="color: #008080;"> 74</span> <span style="color: #000000;">            httpPost.setEntity(entity);
+</span><span style="color: #008080;"> 75</span>             <span style="color: #008000;">//</span><span style="color: #008000;"> 实例化一个默认的Http客户端</span>
+<span style="color: #008080;"> 76</span>             DefaultHttpClient client = <span style="color: #0000ff;">new</span><span style="color: #000000;"> DefaultHttpClient();
+</span><span style="color: #008080;"> 77</span>             <span style="color: #008000;">//</span><span style="color: #008000;"> 执行请求，并获得响应数据</span>
+<span style="color: #008080;"> 78</span>             HttpResponse httpResponse =<span style="color: #000000;"> client.execute(httpPost);
+</span><span style="color: #008080;"> 79</span>             <span style="color: #008000;">//</span><span style="color: #008000;"> 判断是否请求成功，为200时表示成功，其他均问有问题。</span>
+<span style="color: #008080;"> 80</span>             <span style="color: #0000ff;">if</span> (httpResponse.getStatusLine().getStatusCode() == 200<span style="color: #000000;">) {
+</span><span style="color: #008080;"> 81</span>                 <span style="color: #008000;">//</span><span style="color: #008000;"> 通过HttpEntity获得响应流</span>
+<span style="color: #008080;"> 82</span>                 InputStream inputStream =<span style="color: #000000;"> httpResponse.getEntity().getContent();
+</span><span style="color: #008080;"> 83</span>                 <span style="color: #0000ff;">return</span><span style="color: #000000;"> changeInputStream(inputStream, encode);
+</span><span style="color: #008080;"> 84</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;"> 85</span>         } <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (UnsupportedEncodingException e) {
+</span><span style="color: #008080;"> 86</span> <span style="color: #000000;">            e.printStackTrace();
+</span><span style="color: #008080;"> 87</span>         } <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (ClientProtocolException e) {
+</span><span style="color: #008080;"> 88</span> <span style="color: #000000;">            e.printStackTrace();
+</span><span style="color: #008080;"> 89</span>         } <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+</span><span style="color: #008080;"> 90</span> <span style="color: #000000;">            e.printStackTrace();
+</span><span style="color: #008080;"> 91</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 92</span>         <span style="color: #0000ff;">return</span> ""<span style="color: #000000;">;
+</span><span style="color: #008080;"> 93</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 94</span> 
+<span style="color: #008080;"> 95</span>     <span style="color: #008000;">/**</span>
+<span style="color: #008080;"> 96</span> <span style="color: #008000;">     * 把Web站点返回的响应流转换为字符串格式
+</span><span style="color: #008080;"> 97</span> <span style="color: #008000;">     * 
+</span><span style="color: #008080;"> 98</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> inputStream
+</span><span style="color: #008080;"> 99</span> <span style="color: #008000;">     *            响应流
+</span><span style="color: #008080;">100</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> encode
+</span><span style="color: #008080;">101</span> <span style="color: #008000;">     *            编码格式
+</span><span style="color: #008080;">102</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@return</span><span style="color: #008000;"> 转换后的字符串
+</span><span style="color: #008080;">103</span>      <span style="color: #008000;">*/</span>
+<span style="color: #008080;">104</span>     <span style="color: #0000ff;">private</span><span style="color: #000000;"> String changeInputStream(InputStream inputStream, String encode) {
+</span><span style="color: #008080;">105</span>         ByteArrayOutputStream outputStream = <span style="color: #0000ff;">new</span><span style="color: #000000;"> ByteArrayOutputStream();
+</span><span style="color: #008080;">106</span>         <span style="color: #0000ff;">byte</span>[] data = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">byte</span>[1024<span style="color: #000000;">];
+</span><span style="color: #008080;">107</span>         <span style="color: #0000ff;">int</span> len = 0<span style="color: #000000;">;
+</span><span style="color: #008080;">108</span>         String result = ""<span style="color: #000000;">;
+</span><span style="color: #008080;">109</span>         <span style="color: #0000ff;">if</span> (inputStream != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+</span><span style="color: #008080;">110</span>             <span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+</span><span style="color: #008080;">111</span>                 <span style="color: #0000ff;">while</span> ((len = inputStream.read(data)) != -1<span style="color: #000000;">) {
+</span><span style="color: #008080;">112</span>                     outputStream.write(data, 0<span style="color: #000000;">, len);
+</span><span style="color: #008080;">113</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">114</span>                 result = <span style="color: #0000ff;">new</span><span style="color: #000000;"> String(outputStream.toByteArray(), encode);
+</span><span style="color: #008080;">115</span> 
+<span style="color: #008080;">116</span>             } <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+</span><span style="color: #008080;">117</span> <span style="color: #000000;">                e.printStackTrace();
+</span><span style="color: #008080;">118</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">119</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">120</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+</span><span style="color: #008080;">121</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">122</span> 
+<span style="color: #008080;">123</span> }</pre>
+</div>
+<p><strong>AndroidHttpClient</strong></p>
+<p>　　使用AndroidHttpClient的方式和DefaultHttpClient差不多，不多的几点区别上面已经说明，但是在此例子中没有体现。有一点需要注意的是，AndroidHttpClient是一个final类，也没有公开的构造函数，所以无法使用new的形式对其进行实例化，必须使用AndroidHttpClient.newInstance()方法获得AndroidHttpClient对象。</p>
+<p>　　示例中依然是使用POST请求，实现的功能和DefaultHttpClient示例一样。细节部分已经在注释中体现，直接看代码即可。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">  1</span> <span style="color: #0000ff;">package</span><span style="color: #000000;"> com.bgxt.httpUtils;
+</span><span style="color: #008080;">  2</span> 
+<span style="color: #008080;">  3</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.ByteArrayOutputStream;
+</span><span style="color: #008080;">  4</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+</span><span style="color: #008080;">  5</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.InputStream;
+</span><span style="color: #008080;">  6</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.UnsupportedEncodingException;
+</span><span style="color: #008080;">  7</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ArrayList;
+</span><span style="color: #008080;">  8</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.HashMap;
+</span><span style="color: #008080;">  9</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+</span><span style="color: #008080;"> 10</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Map;
+</span><span style="color: #008080;"> 11</span> 
+<span style="color: #008080;"> 12</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.http.HttpResponse;
+</span><span style="color: #008080;"> 13</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.http.NameValuePair;
+</span><span style="color: #008080;"> 14</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.http.client.ClientProtocolException;
+</span><span style="color: #008080;"> 15</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.http.client.HttpClient;
+</span><span style="color: #008080;"> 16</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.http.client.entity.UrlEncodedFormEntity;
+</span><span style="color: #008080;"> 17</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.http.client.methods.HttpPost;
+</span><span style="color: #008080;"> 18</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.http.impl.client.DefaultHttpClient;
+</span><span style="color: #008080;"> 19</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.http.message.BasicNameValuePair;
+</span><span style="color: #008080;"> 20</span> 
+<span style="color: #008080;"> 21</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> android.net.http.AndroidHttpClient;
+</span><span style="color: #008080;"> 22</span> 
+<span style="color: #008080;"> 23</span> <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> AndroidHttpClientUtils <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Runnable {
+</span><span style="color: #008080;"> 24</span> 
+<span style="color: #008080;"> 25</span>     <span style="color: #0000ff;">private</span><span style="color: #000000;"> String username;
+</span><span style="color: #008080;"> 26</span>     <span style="color: #0000ff;">private</span><span style="color: #000000;"> String password;
+</span><span style="color: #008080;"> 27</span> 
+<span style="color: #008080;"> 28</span>     <span style="color: #0000ff;">public</span><span style="color: #000000;"> AndroidHttpClientUtils(String username, String password) {
+</span><span style="color: #008080;"> 29</span>         <span style="color: #008000;">//</span><span style="color: #008000;"> 初始化用户名和密码</span>
+<span style="color: #008080;"> 30</span>         <span style="color: #0000ff;">this</span>.username =<span style="color: #000000;"> username;
+</span><span style="color: #008080;"> 31</span>         <span style="color: #0000ff;">this</span>.password =<span style="color: #000000;"> password;
+</span><span style="color: #008080;"> 32</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 33</span> 
+<span style="color: #008080;"> 34</span> <span style="color: #000000;">    @Override
+</span><span style="color: #008080;"> 35</span>     <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+</span><span style="color: #008080;"> 36</span>         <span style="color: #008000;">//</span><span style="color: #008000;"> 设置访问的Web站点</span>
+<span style="color: #008080;"> 37</span>         String path = "http://192.168.1.103:1231/loginas.ashx"<span style="color: #000000;">;
+</span><span style="color: #008080;"> 38</span>         <span style="color: #008000;">//</span><span style="color: #008000;">设置Http请求参数</span>
+<span style="color: #008080;"> 39</span>         Map&lt;String, String&gt; params = <span style="color: #0000ff;">new</span> HashMap&lt;String, String&gt;<span style="color: #000000;">();
+</span><span style="color: #008080;"> 40</span>         params.put("username"<span style="color: #000000;">, username);
+</span><span style="color: #008080;"> 41</span>         params.put("password"<span style="color: #000000;">, password);
+</span><span style="color: #008080;"> 42</span> 
+<span style="color: #008080;"> 43</span>         String result = sendHttpClientPost(path, params, "utf-8"<span style="color: #000000;">);
+</span><span style="color: #008080;"> 44</span>         <span style="color: #008000;">//</span><span style="color: #008000;">把返回的接口输出</span>
+<span style="color: #008080;"> 45</span> <span style="color: #000000;">        System.out.println(result);
+</span><span style="color: #008080;"> 46</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 47</span>     <span style="color: #008000;">/**</span>
+<span style="color: #008080;"> 48</span> <span style="color: #008000;">     * 发送Http请求到Web站点
+</span><span style="color: #008080;"> 49</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> path Web站点请求地址
+</span><span style="color: #008080;"> 50</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> map Http请求参数
+</span><span style="color: #008080;"> 51</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> encode 编码格式
+</span><span style="color: #008080;"> 52</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@return</span><span style="color: #008000;"> Web站点响应的字符串
+</span><span style="color: #008080;"> 53</span>      <span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 54</span>     <span style="color: #0000ff;">private</span> String sendHttpClientPost(String path,Map&lt;String, String&gt;<span style="color: #000000;"> map,String encode)
+</span><span style="color: #008080;"> 55</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 56</span>         List&lt;NameValuePair&gt; list=<span style="color: #0000ff;">new</span> ArrayList&lt;NameValuePair&gt;<span style="color: #000000;">();
+</span><span style="color: #008080;"> 57</span>         <span style="color: #0000ff;">if</span>(map!=<span style="color: #0000ff;">null</span>&amp;&amp;!<span style="color: #000000;">map.isEmpty())
+</span><span style="color: #008080;"> 58</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;"> 59</span>             <span style="color: #0000ff;">for</span>(Map.Entry&lt;String, String&gt;<span style="color: #000000;"> entry:map.entrySet())
+</span><span style="color: #008080;"> 60</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;"> 61</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">解析Map传递的参数，使用一个键值对对象BasicNameValuePair保存。</span>
+<span style="color: #008080;"> 62</span>                 list.add(<span style="color: #0000ff;">new</span><span style="color: #000000;"> BasicNameValuePair(entry.getKey(), entry.getValue()));
+</span><span style="color: #008080;"> 63</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;"> 64</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 65</span>         <span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+</span><span style="color: #008080;"> 66</span>             <span style="color: #008000;">//</span><span style="color: #008000;">实现将请求 的参数封装封装到HttpEntity中。</span>
+<span style="color: #008080;"> 67</span>             UrlEncodedFormEntity entity=<span style="color: #0000ff;">new</span><span style="color: #000000;"> UrlEncodedFormEntity(list, encode);
+</span><span style="color: #008080;"> 68</span>             <span style="color: #008000;">//</span><span style="color: #008000;">使用HttpPost请求方式</span>
+<span style="color: #008080;"> 69</span>             HttpPost httpPost=<span style="color: #0000ff;">new</span><span style="color: #000000;"> HttpPost(path);
+</span><span style="color: #008080;"> 70</span>             <span style="color: #008000;">//</span><span style="color: #008000;">设置请求参数到Form中。</span>
+<span style="color: #008080;"> 71</span> <span style="color: #000000;">            httpPost.setEntity(entity);
+</span><span style="color: #008080;"> 72</span>             <span style="color: #008000;">//</span><span style="color: #008000;">实例化一个默认的Http客户端，使用的是AndroidHttpClient</span>
+<span style="color: #008080;"> 73</span>             HttpClient client=AndroidHttpClient.newInstance(""<span style="color: #000000;">);
+</span><span style="color: #008080;"> 74</span>             <span style="color: #008000;">//</span><span style="color: #008000;">执行请求，并获得响应数据</span>
+<span style="color: #008080;"> 75</span>             HttpResponse httpResponse=<span style="color: #000000;"> client.execute(httpPost);
+</span><span style="color: #008080;"> 76</span>             <span style="color: #008000;">//</span><span style="color: #008000;">判断是否请求成功，为200时表示成功，其他均问有问题。</span>
+<span style="color: #008080;"> 77</span>             <span style="color: #0000ff;">if</span>(httpResponse.getStatusLine().getStatusCode()==200<span style="color: #000000;">)
+</span><span style="color: #008080;"> 78</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;"> 79</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">通过HttpEntity获得响应流</span>
+<span style="color: #008080;"> 80</span>                 InputStream inputStream=<span style="color: #000000;">httpResponse.getEntity().getContent();
+</span><span style="color: #008080;"> 81</span>                 <span style="color: #0000ff;">return</span><span style="color: #000000;"> changeInputStream(inputStream,encode);
+</span><span style="color: #008080;"> 82</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;"> 83</span>             
+<span style="color: #008080;"> 84</span>         } <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (UnsupportedEncodingException e) {
+</span><span style="color: #008080;"> 85</span>             <span style="color: #008000;">//</span><span style="color: #008000;"> TODO Auto-generated catch block</span>
+<span style="color: #008080;"> 86</span> <span style="color: #000000;">            e.printStackTrace();
+</span><span style="color: #008080;"> 87</span>         } <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (ClientProtocolException e) {
+</span><span style="color: #008080;"> 88</span>             <span style="color: #008000;">//</span><span style="color: #008000;"> TODO Auto-generated catch block</span>
+<span style="color: #008080;"> 89</span> <span style="color: #000000;">            e.printStackTrace();
+</span><span style="color: #008080;"> 90</span>         } <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+</span><span style="color: #008080;"> 91</span>             <span style="color: #008000;">//</span><span style="color: #008000;"> TODO Auto-generated catch block</span>
+<span style="color: #008080;"> 92</span> <span style="color: #000000;">            e.printStackTrace();
+</span><span style="color: #008080;"> 93</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 94</span>         
+<span style="color: #008080;"> 95</span>         <span style="color: #0000ff;">return</span> ""<span style="color: #000000;">;
+</span><span style="color: #008080;"> 96</span> <span style="color: #000000;">    }                    
+</span><span style="color: #008080;"> 97</span>     <span style="color: #008000;">/**</span>
+<span style="color: #008080;"> 98</span> <span style="color: #008000;">     * 把Web站点返回的响应流转换为字符串格式
+</span><span style="color: #008080;"> 99</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> inputStream 响应流
+</span><span style="color: #008080;">100</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> encode 编码格式
+</span><span style="color: #008080;">101</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@return</span><span style="color: #008000;"> 转换后的字符串
+</span><span style="color: #008080;">102</span>      <span style="color: #008000;">*/</span>
+<span style="color: #008080;">103</span>     <span style="color: #0000ff;">private</span><span style="color: #000000;">  String changeInputStream(InputStream inputStream,
+</span><span style="color: #008080;">104</span> <span style="color: #000000;">            String encode) { 
+</span><span style="color: #008080;">105</span>         ByteArrayOutputStream outputStream = <span style="color: #0000ff;">new</span><span style="color: #000000;"> ByteArrayOutputStream();
+</span><span style="color: #008080;">106</span>         <span style="color: #0000ff;">byte</span>[] data = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">byte</span>[1024<span style="color: #000000;">];
+</span><span style="color: #008080;">107</span>         <span style="color: #0000ff;">int</span> len = 0<span style="color: #000000;">;
+</span><span style="color: #008080;">108</span>         String result=""<span style="color: #000000;">;
+</span><span style="color: #008080;">109</span>         <span style="color: #0000ff;">if</span> (inputStream != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+</span><span style="color: #008080;">110</span>             <span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+</span><span style="color: #008080;">111</span>                 <span style="color: #0000ff;">while</span> ((len = inputStream.read(data)) != -1<span style="color: #000000;">) {
+</span><span style="color: #008080;">112</span>                     outputStream.write(data,0<span style="color: #000000;">,len);                    
+</span><span style="color: #008080;">113</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">114</span>                 result=<span style="color: #0000ff;">new</span><span style="color: #000000;"> String(outputStream.toByteArray(),encode);
+</span><span style="color: #008080;">115</span>                 
+<span style="color: #008080;">116</span>             } <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+</span><span style="color: #008080;">117</span> <span style="color: #000000;">                e.printStackTrace();
+</span><span style="color: #008080;">118</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">119</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">120</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+</span><span style="color: #008080;">121</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">122</span> }</pre>
+</div>
+<p>　　在本文的示例中，环境是使用的Android项目，可以对其进行简单的界面布局，如图：</p>
+<p><img src="http://images.cnitblog.com/blog/234895/201306/22203237-984a7dc8972f4a75b79783bc43202261.x-png" alt="" /></p>
+<p>　　如果输入用户和密码为：admin+123，则可以再LogCat中查看到登录成功。</p>
+<p><img src="http://images.cnitblog.com/blog/234895/201306/22203527-865ea6d5cf714e7fb4694bc4c77cd5e2.x-png" alt="" /></p>
+<p>　　<a href="http://download.csdn.net/detail/plokmju88/5632307">源码下载</a></p>
+<p>&nbsp;</p>
+<p><strong>总结</strong></p>
+<p>　　最近的两次博客中，已经分别介绍了HttpUrlConnection和HttpClient两种方式，通过Http协议对Web站点的访问。如果还不了解HttpURLConnection的读者，可以看看<a href="http://www.cnblogs.com/plokmju/p/java-HTTP.html">Android--Http协议</a>。</p>
+<p>　　根据官方文档上说的显示，Android包括两个Http客户端：HttpURLConnection和Apache HttpClient。并且都支持HTTPS，流媒体上传下载，并且可配置超时以及支持IPv6和连接池技术。但是因为移动设备的局限性，HttpURLConnection会是比Apache Http更好的选择，因为其API简单，运行消耗内存小，并且具有公开化的压缩算法，以及响应缓存，能更好的减少网络使用，提供运行速度和节省电池。</p>
+<p>　　但是也不能否认Apache HttpClient，它有大量的灵活的API，实现比较稳定，少有Bug，可造成的问题就是很难在不影响其兼容性的情况下对其进行改进了。现在Android开发者已经慢慢放弃Apache HttpClient的使用，转而使用HttpURLConnection。但是对于Android2.2之前的版本，HttpURLConnection具有一个致命的BUG，在响应输入流InputStream中调用.Close()方法将会阻碍连接池，因为这个BUG，只能放弃连接池的使用，但是Apache HttpClient不存在这个问题，当然Android2.3之后的版本中，HttpURLConnection已经解决了这个BUG，可以放心使用。</p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory"></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info">
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"></div>
+</div>
+
+
+		<p class="postfoot">
+			posted on <span id="post-date">2013-06-22 21:01</span> <a href='http://www.cnblogs.com/plokmju/'>承香墨影</a> 阅读(<span id="post_view_count">...</span>) 评论(<span id="post_comment_count">...</span>)  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=3148947" rel="nofollow">编辑</a> <a href="#" onclick="AddToWz(3148947);return false;">收藏</a>
+		</p>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=141671,cb_entryId=3148947,cb_blogApp=currentBlogApp,cb_blogUserGuid='f8b928a6-a703-e011-ac81-842b2b196315',cb_entryCreatedDate='2013/6/22 21:01:00';loadViewCount(cb_entryId);</script>
+	
+	</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id='comment_form' class='commentform'>
+<a name='commentform'></a>
+<div id='divCommentShow'></div>
+<div id='comment_nav'><span id='span_refresh_tips'></span><a href='javascript:void(0);' onclick='return RefreshCommentList();' id='lnk_RefreshComments' runat='server' clientidmode='Static'>刷新评论</a><a href='#' onclick='return RefreshPage();'>刷新页面</a><a href='#top'>返回顶部</a></div>
+<div id='comment_form_container'></div>
+<div class='ad_text_commentbox' id='ad_text_under_commentbox'></div>
+<div id='ad_t2'></div>
+<div id='opt_under_post'></div>
+<div id='ad_c1' class='c_ad_block'></div>
+<div id='under_post_news'></div>
+<div id='ad_c2' class='c_ad_block'></div>
+<div id='under_post_kb'></div>
+<div id='HistoryToday' class='c_ad_block'></div>
+<script type='text/javascript'>
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+	
+<p id="footer">
+	Powered by: 
+	<br />
+	
+	<a id="Footer1_Hyperlink3" NAME="Hyperlink1" href="http://www.cnblogs.com/" style="font-family:Verdana;font-size:12px;">博客园</a>
+	<br />
+	Copyright &copy; 承香墨影
+</p>
+</div>
+<div id="rightmenu">
+	
+		<div id="blog-calendar" style="display:none"></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+		
+<h3>导航</h3>
+<ul>
+			<li><a id="blog_nav_sitehome" href="http://www.cnblogs.com/">博客园</a></li>
+			<li><a id="blog_nav_myhome" href="http://www.cnblogs.com/plokmju/">首页</a></li>
+			<li><a id="blog_nav_newpost" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+			<li><a id="blog_nav_contact" accesskey="9" rel="nofollow" href="https://msg.cnblogs.com/send/%E6%89%BF%E9%A6%99%E5%A2%A8%E5%BD%B1">联系</a></li>
+			<li><a id="blog_nav_rss" href="http://www.cnblogs.com/plokmju/rss">订阅</a><a id="blog_nav_rss_image" href="http://www.cnblogs.com/plokmju/rss"><img src="//www.cnblogs.com/images/xml.gif" alt="订阅" /></a>
+			<li><a id="blog_nav_admin" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+		<div id="blog_stats">
+<h3>统计</h3>
+	<ul>
+		<li>随笔 - 80
+		<li>文章 - 2
+		<li>评论 - 296
+		<li>引用 - 0
+	</li>
+</ul></div>
+		
+<h3>公告</h3>
+	<div id="blog-news"></div><script type="text/javascript">loadBlogNews();</script>
+
+		<div id="blog-sidecolumn"></div><script type="text/javascript">loadBlogSideColumn();</script>
+	
+</div>
+			
+			
+			
+			
+			 
+
+	
+
+</body>
+</html>

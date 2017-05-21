@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/item_intent"
+        android:orderInCategory="100"
+        android:title="@string/item_intent"/>
+    <item
+        android:id="@+id/item_sms_helper"
+        android:orderInCategory="100"
+        android:title="@string/item_sms_helper"/>
+    <item
+        android:id="@+id/item_receiver"
+        android:orderInCategory="100"
+        android:title="@string/item_receiver"/>
+    <item
+        android:id="@+id/item_service"
+        android:title="@string/item_service">
+        <menu>
+            <item
+                android:id="@+id/item_service_test"
+                android:orderInCategory="100"
+                android:title="@string/item_service_test"/>
+            <item
+                android:id="@+id/item_service_banzheng"
+                android:orderInCategory="100"
+                android:title="@string/item_service_banzheng"/>
+            <item
+                android:id="@+id/item_service_pay"
+                android:orderInCategory="100"
+                android:title="@string/item_service_pay"/>
+        </menu>
+    </item>
+    <item android:id="@+id/item_zxing"
+          android:orderInCategory="100"
+          android:title="@string/item_zxing"></item>
+    <item android:id="@+id/item_dagger2"
+          android:orderInCategory="100"
+          android:title="@string/item_dagger2"/>
+    <item android:id="@+id/item_refresh_lv"
+          android:orderInCategory="100"
+          android:title="@string/item_refresh_lv"></item>
+    <item android:id="@+id/item_vitamio"
+          android:orderInCategory="100"
+          android:title="@string/item_vitamio"></item>
+    <item android:id="@+id/item_web_view"
+          android:orderInCategory="100"
+          android:title="@string/item_web_view"></item>
+    <item android:id="@+id/item_ijk_player"
+          android:orderInCategory="100"
+          android:title="@string/item_ijk_player"></item>
+    <item android:id="@+id/item_img"
+          android:orderInCategory="100"
+          android:title="@string/item_img"></item>
+</menu>

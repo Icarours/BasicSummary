@@ -1,0 +1,1 @@
+include ':app', ':commonactivity', ':libzxing', ':receivertest', ':refreshlistView', ':vitamio_lib', ':VariedImageView_lib', ':demo', ':viewdemo', ':okhttputils', ':image_lib'

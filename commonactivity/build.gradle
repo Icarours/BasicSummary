@@ -1,0 +1,67 @@
+apply plugin: 'com.android.application'
+apply plugin: 'android-apt'//使用butterKnife需要添加多处设置2
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    defaultConfig {
+        applicationId "com.syl.commonactivity"
+        minSdkVersion 21
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    //httpClient
+    useLibrary 'org.apache.http.legacy'
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    testCompile 'junit:junit:4.12'
+    //使用butterKnife需要添加多处设置3
+    compile 'com.jakewharton:butterknife:8.4.0'
+    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    //material_design
+    compile 'com.android.support:design:25.1.0'
+    //recyclerview
+    compile 'com.android.support:recyclerview-v7:25.1.0'
+    //二维码,精简后的二维码包
+    compile project(':libzxing')
+    //gson
+    compile 'com.google.code.gson:gson:2.8.0'
+    //listView刷新
+    compile 'com.liaoinstan.springview:library:1.2.6'
+    compile files('libs/okhttp-2.7.5.jar')
+    compile files('libs/okio-1.12.0.jar')
+    compile project(':vitamio_lib')
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    //ijkplayer
+    compile 'tv.danmaku.ijk.media:ijkplayer-java:0.7.9'
+    compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.7.9'
+    // # Other ABIs: optional
+    compile 'tv.danmaku.ijk.media:ijkplayer-armv5:0.7.9'
+    compile 'tv.danmaku.ijk.media:ijkplayer-arm64:0.7.9'
+    compile 'tv.danmaku.ijk.media:ijkplayer-x86:0.7.9'
+    compile 'tv.danmaku.ijk.media:ijkplayer-x86_64:0.7.9'
+    //    # ExoPlayer as IMediaPlayer: optional, experimental
+    compile 'tv.danmaku.ijk.media:ijkplayer-exo:0.7.9'
+    compile 'com.makeramen:roundedimageview:2.3.0'
+
+    //volley
+    compile group: 'com.mcxiaoke.volley', name: 'library', version: '1.0.19'
+    //volley plus
+    compile 'dev.dworks.libs:volleyplus:0.1.4'
+}

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.syl.commonactivity">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    //调用相机
+    <uses-permission android:name="android.permission.CAMERA"/>
+    //震动（用不到震动可以去掉）
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    //闪光灯（如不用闪光灯可以去掉）
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.DetailActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity android:name=".activity.IntentActivity">
+        </activity>
+        <activity android:name=".base.BaseActivity">
+        </activity>
+        <activity android:name=".activity.SmsHelperActivity">
+        </activity>
+        <activity android:name=".activity.NumberActivity">
+        </activity>
+        <activity android:name=".activity.TemplateActivity">
+        </activity>
+        <activity android:name=".activity.MyReceiverActivity">
+        </activity>
+        <activity android:name=".activity.ServiceActivity">
+        </activity>
+        /*------------------ receiver -----------------*/
+        <receiver android:name=".receiver.OutGoingCallReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL"/>
+            </intent-filter>
+        </receiver>
+        <!--
+        这个action<action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+        找不到了,估计是Android系统屏蔽了这个action
+        -->
+        <receiver
+            android:name=".receiver.SmsSpyReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.MyReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.syl.TEST_RECEIVER"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.FinalReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="1000">
+                <action android:name="com.syl.TEST_ORDER_RECEIVER"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.ShengReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="500">
+                <action android:name="com.syl.TEST_ORDER_RECEIVER"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.ShiReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="300">
+                <action android:name="com.syl.TEST_ORDER_RECEIVER"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.XianReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="200">
+                <action android:name="com.syl.TEST_ORDER_RECEIVER"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.MinReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="100">
+                <action android:name="com.syl.TEST_ORDER_RECEIVER"/>
+            </intent-filter>
+        </receiver>
+        <!--
+        <receiver
+            android:name=".receiver.LockScreenReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_OFF"/>
+                <action android:name="android.intent.action.SCREEN_ON"/>
+            </intent-filter>
+        </receiver>
+        -->
+        <!--
+        <receiver
+            android:name=".receiver.Min2Receiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
+        -->
+
+        /*------------------ service -----------------*/
+        <service
+            android:name=".service.TestService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
+
+        <activity android:name=".activity.BanzhengActivity">
+        </activity>
+
+        <service
+            android:name=".service.BanzhengService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
+
+        <activity android:name=".activity.MeiTuanActivity">
+        </activity>
+
+        <service
+            android:name=".service.MyService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.syl.AAAA"/>
+            </intent-filter>
+        </service>
+
+        <activity android:name=".activity.ZXingActivity">
+        </activity>
+        <activity android:name=".activity.TestDagger2Activity">
+        </activity>
+        <activity android:name=".activity.RefreshActivity">
+        </activity>
+        <activity android:name=".activity.VideoJumpActivity">
+        </activity>
+        <activity
+            android:name=".activity.VitamioActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppThemeFullscreen">
+        </activity>
+        <activity
+            android:name=".activity.WebViewActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppThemeFullscreen">
+        </activity>
+        <activity android:name=".activity.IjkPlayerActivity">
+        </activity>
+        <activity android:name=".activity.ImageActivity">
+        </activity>
+    </application>
+
+</manifest>

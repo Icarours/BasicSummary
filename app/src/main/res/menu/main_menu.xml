@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools">
+    <item android:id="@+id/item_call"
+          android:icon="@mipmap/ic_action_call"
+          android:orderInCategory="100"
+          android:showAsAction="always"
+          android:title="call"
+          tools:ignore="AppCompatResource"></item>
+    <item android:id="@+id/item_copy"
+          android:icon="@mipmap/ic_action_copy"
+          android:orderInCategory="100"
+          android:showAsAction="always"
+          android:title="copy"
+          tools:ignore="AppCompatResource"></item>
+    <item android:id="@+id/item_mail"
+          android:icon="@mipmap/ic_action_mail"
+          android:orderInCategory="100"
+          android:showAsAction="ifRoom"
+          android:title="mail"
+          tools:ignore="AppCompatResource"></item>
+</menu>

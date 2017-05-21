@@ -1,0 +1,9 @@
+<resources>
+    <declare-styleable name="VariedImageView">
+        <attr name="borderOverlay" format="boolean" />
+        <attr name="borderThick" format="dimension" />
+        <attr name="borderColor" format="color" />
+    </declare-styleable>
+
+    <attr name="VariedImageViewStyle" format="reference" />
+</resources>

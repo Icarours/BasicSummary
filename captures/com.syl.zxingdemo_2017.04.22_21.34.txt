@@ -1,0 +1,49 @@
+Applications Memory Usage (kB):
+Uptime: 3174771646 Realtime: 3713272183
+
+** MEMINFO in pid 16492 [com.syl.zxingdemo] **
+                   Pss  Private  Private  Swapped     Heap     Heap     Heap
+                 Total    Dirty    Clean    Dirty     Size    Alloc     Free
+                ------   ------   ------   ------   ------   ------   ------
+  Native Heap     6138     5996        0        0    13056    11246     1809
+  Dalvik Heap    13475    13332        0        0    42980    26088    16892
+ Dalvik Other      661      660        0        0                           
+        Stack      216      216        0        0                           
+       Ashmem        2        0        0        0                           
+      Gfx dev     2320     2320        0        0                           
+    Other dev        4        0        4        0                           
+     .so mmap      872      156      212        0                           
+    .apk mmap      191        0      100        0                           
+    .ttf mmap       54        0        8        0                           
+    .dex mmap     4370      104     4264        0                           
+    .oat mmap     2156        0      944        0                           
+    .art mmap     1615     1320       20        0                           
+   Other mmap      785        8      452        0                           
+      Unknown      176      176        0        0                           
+        TOTAL    33035    24288     6004        0    56036    37334    18701
+ 
+ App Summary
+                       Pss(KB)
+                        ------
+           Java Heap:    14672
+         Native Heap:     5996
+                Code:     5788
+               Stack:      216
+            Graphics:     2320
+       Private Other:     1300
+              System:     2743
+ 
+               TOTAL:    33035      TOTAL SWAP (KB):        0
+ 
+ Objects
+               Views:       24         ViewRootImpl:        1
+         AppContexts:        2           Activities:        1
+              Assets:        5        AssetManagers:        3
+       Local Binders:       26        Proxy Binders:       20
+       Parcel memory:        5         Parcel count:       22
+    Death Recipients:        1      OpenSSL Sockets:        0
+ 
+ SQL
+         MEMORY_USED:        0
+  PAGECACHE_OVERFLOW:        0          MALLOC_SIZE:        0
+ 

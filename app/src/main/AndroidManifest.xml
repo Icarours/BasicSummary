@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.syl.basicsummary">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
+    <application
+        android:name=".base.MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.CommonWidget">
+        </activity>
+        <activity android:name=".activity.NetRequestActivity">
+        </activity>
+        <activity android:name=".activity.AnimationActivity">
+        </activity>
+        <activity android:name=".activity.DataStorageActivity">
+        </activity>
+        <activity android:name=".activity.ImageActivity">
+        </activity>
+        <activity android:name=".activity.AssemblyActivity">
+        </activity>
+        <activity android:name=".activity.HTML5Activity">
+        </activity>
+        <activity android:name=".activity.HttpUrlActivity">
+        </activity>
+        <activity android:name=".activity.HttpClientActivity">
+        </activity>
+        <activity android:name=".activity.VolleyActivity">
+        </activity>
+        <activity android:name=".activity.OkHttpActivity">
+        </activity>
+        <activity android:name=".activity.RetrofitActivity">
+        </activity>
+        <activity android:name=".activity.NetRequestDocActivity">
+        </activity>
+        <activity android:name=".activity.DataDecodeActivity">
+        </activity>
+        <activity android:name=".activity.LvActivity">
+        </activity>
+        <activity android:name=".activity.RvActivity">
+        </activity>
+        <activity android:name=".activity.DActivity">
+        </activity>
+        <activity android:name=".activity.VpActivity">
+        </activity>
+        <activity android:name=".activity.MenuActivity">
+        </activity>
+        <activity android:name=".activity.NotificationActivity">
+        </activity>
+        <activity android:name=".activity.GvActivity">
+        </activity>
+        <activity android:name=".activity.OptionMenuActivity">
+        </activity>
+        <activity android:name=".activity.SubMenuActivity">
+        </activity>
+        <activity android:name=".activity.ContextMenuActivity">
+        </activity>
+        <activity android:name=".activity.ABDLActivity">
+        </activity>
+        <activity android:name=".activity.RapidDevelopment">
+        </activity>
+        <activity android:name=".activity.BugActivity">
+        </activity>
+        <activity android:name=".activity.BugFragmentActivity">
+        </activity>
+        <activity android:name=".activity.AudioVideoActivity">
+        </activity>
+        <activity android:name=".base.BaseActivity">
+        </activity>
+        <activity android:name=".activity.SlidingMenuActivity1"/>
+        <activity android:name=".activity.ActivityActivity">
+        </activity>
+        <activity android:name=".activity.ServiceActivity">
+        </activity>
+        <activity android:name=".activity.ContentProviderActivity">
+        </activity>
+        <activity android:name=".activity.BroadcastReceiverActivity">
+        </activity>
+        <activity android:name=".activity.EventTouchConflictActivity">
+        </activity>
+
+
+        <activity android:name=".TestActivity">
+        </activity>
+        <activity android:name=".activity.SqliteActivity">
+        </activity>
+        <activity android:name=".activity.SpActivity">
+        </activity>
+        <activity android:name=".activity.DataActivity">
+        </activity>
+        <activity android:name=".activity.NsActivity">
+        </activity>
+        <activity android:name=".activity.ScrollListViewActivity">
+        </activity>
+        <activity android:name=".activity.SocketActivity">
+        </activity>
+        <activity android:name=".activity.OtherFrameWorkActivity">
+        </activity>
+        <activity android:name=".eventbus.activity.EventBusActivity">
+        </activity>
+        <activity android:name=".eventbus.activity.SendMsgActivity">
+        </activity>
+
+        <!--service-->
+        <service android:name=".service.MyService"
+                 android:process=":MyService">
+        </service>
+    </application>
+
+</manifest>

@@ -1,0 +1,40 @@
+清单文件中
+<application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:largeHeap="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+    </application>
+
+
+设置android:largeHeap="true",可以获得更大的内存空间,
+小米通常是256mb,最大内存是512mb
+酷派通常是128mb,最大内存是256mb
+
+
+//1.加载服务器签名证书,拿到证书
+        try {
+            String certName = "certscacwashingtonedu.crt";
+            InputStream certInput = new BufferedInputStream(getAssets().open(certName));
+            CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+            mServerCert = (X509Certificate) certificateFactory.generateCertificate(certInput);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        }
+//2.获取证书管理器,校验证书
+        TrustManager[] trustAllCerts = new TrustManager[]{}
+//3.初始化SSLContext
+         SSLContext sslContext = SSLContext.getInstance("SSL");
+         sslContext.init(null, trustAllCerts, null);
+
+//4.创建SSLSocketFactory
+          SSLSocketFactory socketFactory = sslContext.getSocketFactory();
+          //给httpsURLConnection设置SSLSocketFactory
+          httpsURLConnection.setSSLSocketFactory(socketFactory);
+
+

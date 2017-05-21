@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">BasicSummary</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
+    <string name="tv_content">
+        Gallery组件主要用于横向显示图像列表，不过按常规做法。Gallery组件只能有限地显示指定的图像。也就是说，如果为Gallery组件指定了10张图像，那么当Gallery组件显示到第10张时，就不会再继续显示了。这虽然在大多数时候没有什么关系，但在某些情况下，我们希望图像显示到最后一张时再重第1张开始显示，也就是循环显示。要实现这种风格的Gallery组件，就需要对Gallery的Adapter对象进行一番改进。
+    </string>
+
+    /*------------主页数组------------------*/
+    <string-array name="main_titles">
+        <item>首页</item>
+        <item>图书</item>
+        <item>游戏</item>
+        <item>电影</item>
+        <item>音乐</item>
+    </string-array>
+
+    /*------------bugActivity数组------------------*/
+    <string-array name="bug_titles">
+        <item>Fragment notifyDataSetChange无效</item>
+    </string-array>
+</resources>

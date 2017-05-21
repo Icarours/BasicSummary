@@ -1,0 +1,432 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Android探索之HttpURLConnection网络请求 - 总李写代码 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=03KQeESEmpLfzDqUo0NiWUg5Zd5aRam3JHBZTK05Wug1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="/skins/LessIsMore/bundle-LessIsMore.css?v=0F7NKnmmVYJDCp-KQ2sA7Dn1GREfDmWWyNjiJP9YrzE1"/>
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="/skins/LessIsMore/bundle-LessIsMore-mobile.css?v=-559DaKqzQsHh-ZmNj3u85wntv3Lbkjpzbkkq1zkN_E1"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/whoislcj/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/whoislcj/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/whoislcj/wlwmanifest.xml"/>
+<script src="//common.cnblogs.com/script/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'whoislcj', cb_enable_mathjax=false;var isLogined=false;</script>
+<script src="/bundles/blog-common.js?v=VojbxZmhS6OYu7vtmoh-qH-fKxvq6c_Pb2g8lij19701" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+		
+<!--done-->
+<div class="title"><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/whoislcj/">总李写代码</a></div>
+<div class="subtitle">宠辱不惊，看庭前花开花落；去留无意，望天空云卷云舒。</div>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li id="nav_sitehome"><a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+<li id="nav_myhome"></li>
+<li id="nav_newpost"><a id="blog_nav_newpost" class="menu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li id="nav_contact"></li>
+<li id="nav_rss">
+<!----></li>
+<li id="nav_admin"><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+
+		<div class="blogStats">
+			
+			<div id="blog_stats">
+<!--done-->
+随笔-98&nbsp;
+文章-0&nbsp;
+评论-147&nbsp;
+</div>
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/whoislcj/p/5520384.html">Android探索之HttpURLConnection网络请求</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><h3>前言：&nbsp;</h3>
+<p>&nbsp; &nbsp; &nbsp;最近一直想着学习一下比较好的开源网络框架okhttp，想着学习之前还是先总结一下Android原生提供的网络请求。之前一直在使用HttpClient，但是android 6.0(api 23) SDK，不再提供org.apache.http.*(只保留几个类).所以我们今天主要总结HttpURLConnection的使用。</p>
+<h3>HttpURLConnection介绍：</h3>
+<p>&nbsp; &nbsp;HttpURLConnection是一种多用途、轻量极的HTTP客户端，使用它来进行HTTP操作可以适用于大多数的应用程序。对于之前为何一直使用HttpClient而不使用HttpURLConnection也是有原因的。具体分析如下</p>
+<ul>
+<li>HttpClient是apache的开源框架，封装了访问http的请求头，参数，内容体，响应等等，使用起来比较方便，而HttpURLConnection是java的标准类，什么都没封装，用起来太原始，不方便，比如重访问的自定义，以及一些高级功能等。</li>
+<li>从稳定性方面来说的话，HttpClient很稳定，功能强，BUG少，容易控制细节，而之前的HttpURLConnection一直存在着版本兼容的问题，不过在后续的版本中已经相继修复掉了。</li>
+</ul>
+<p>&nbsp; &nbsp;从上面可以看出之前一直使用HttClient是由于HttpURLConnection不稳定导致，那么现在谷歌虽然修复了HttpURLConnection之前存在的一些问题之后，相比HttpClient有什么优势呢？为何要废除HttpClient呢？</p>
+<ul>
+<li>HttpUrlConnection是Android SDK的标准实现，而HttpClient是apache的开源实现；</li>
+<li>HttpUrlConnection直接支持GZIP压缩；HttpClient也支持，但要自己写代码处理；</li>
+<li>HttpUrlConnection直接支持系统级连接池，即打开的连接不会直接关闭，在一段时间内所有程序可共用；HttpClient当然也能做到，但毕竟不如官方直接系统底层支持好；</li>
+<li>HttpUrlConnection直接在系统层面做了缓存策略处理，加快重复请求的速度。</li>
+</ul>
+<h3>HttpURLConnection使用：</h3>
+<h4>&nbsp; &nbsp; &nbsp;Get请求实现：</h4>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span> requestGet(HashMap&lt;String, String&gt;<span style="color: #000000;"> paramsMap) {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            String baseUrl </span>= "https://xxx.com/getUsers?"<span style="color: #000000;">;
+            StringBuilder tempParams </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> StringBuilder();
+            </span><span style="color: #0000ff;">int</span> pos = 0<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (String key : paramsMap.keySet()) {
+                </span><span style="color: #0000ff;">if</span> (pos &gt; 0<span style="color: #000000;">) {
+                    tempParams.append(</span>"&amp;"<span style="color: #000000;">);
+                }
+                tempParams.append(String.format(</span>"%s=%s", key, URLEncoder.encode(paramsMap.get(key),"utf-8"<span style="color: #000000;">)));
+                pos</span>++<span style="color: #000000;">;
+            }
+            String requestUrl </span>= baseUrl +<span style="color: #000000;"> tempParams.toString();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 新建一个URL对象</span>
+            URL url = <span style="color: #0000ff;">new</span><span style="color: #000000;"> URL(requestUrl);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 打开一个HttpURLConnection连接</span>
+            HttpURLConnection urlConn =<span style="color: #000000;"> (HttpURLConnection) url.openConnection();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置连接主机超时时间</span>
+            urlConn.setConnectTimeout(5 * 1000<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">设置从主机读取数据超时</span>
+            urlConn.setReadTimeout(5 * 1000<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置是否使用缓存  默认是true</span>
+            urlConn.setUseCaches(<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置为Post请求</span>
+            urlConn.setRequestMethod("GET"<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">urlConn设置请求头信息
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">设置请求中的媒体类型信息。</span>
+            urlConn.setRequestProperty("Content-Type", "application/json"<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">设置客户端与服务连接类型</span>
+            urlConn.addRequestProperty("Connection", "Keep-Alive"<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 开始连接</span>
+<span style="color: #000000;">            urlConn.connect();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 判断请求是否成功</span>
+            <span style="color: #0000ff;">if</span> (urlConn.getResponseCode() == 200<span style="color: #000000;">) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取返回的数据</span>
+                String result =<span style="color: #000000;"> streamToString(urlConn.getInputStream());
+                Log.e(TAG, </span>"Get方式请求成功，result---&gt;" +<span style="color: #000000;"> result);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                Log.e(TAG, </span>"Get方式请求失败"<span style="color: #000000;">);
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 关闭连接</span>
+<span style="color: #000000;">            urlConn.disconnect();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            Log.e(TAG, e.toString());
+        }
+    }</span></pre>
+</div>
+<h4>&nbsp; &nbsp; POST请求实现：</h4>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span> requestPost(HashMap&lt;String, String&gt;<span style="color: #000000;"> paramsMap) {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            String baseUrl </span>= "https://xxx.com/getUsers"<span style="color: #000000;">;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">合成参数</span>
+            StringBuilder tempParams = <span style="color: #0000ff;">new</span><span style="color: #000000;"> StringBuilder();
+            </span><span style="color: #0000ff;">int</span> pos = 0<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (String key : paramsMap.keySet()) {
+                </span><span style="color: #0000ff;">if</span> (pos &gt; 0<span style="color: #000000;">) {
+                    tempParams.append(</span>"&amp;"<span style="color: #000000;">);
+                }
+                tempParams.append(String.format(</span>"%s=%s", key,  URLEncoder.encode(paramsMap.get(key),"utf-8"<span style="color: #000000;">)));
+                pos</span>++<span style="color: #000000;">;
+            }
+            String params </span>=<span style="color: #000000;">tempParams.toString();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 请求的参数转换为byte数组</span>
+            <span style="color: #0000ff;">byte</span>[] postData =<span style="color: #000000;"> params.getBytes();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 新建一个URL对象</span>
+            URL url = <span style="color: #0000ff;">new</span><span style="color: #000000;"> URL(baseUrl);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 打开一个HttpURLConnection连接</span>
+            HttpURLConnection urlConn =<span style="color: #000000;"> (HttpURLConnection) url.openConnection();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置连接超时时间</span>
+            urlConn.setConnectTimeout(5 * 1000<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">设置从主机读取数据超时</span>
+            urlConn.setReadTimeout(5 * 1000<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Post请求必须设置允许输出 默认false</span>
+            urlConn.setDoOutput(<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">设置请求允许输入 默认是true</span>
+            urlConn.setDoInput(<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Post请求不能使用缓存</span>
+            urlConn.setUseCaches(<span style="color: #0000ff;">false</span><span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置为Post请求</span>
+            urlConn.setRequestMethod("POST"<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">设置本次连接是否自动处理重定向</span>
+            urlConn.setInstanceFollowRedirects(<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 配置请求Content-Type</span>
+            urlConn.setRequestProperty("Content-Type", "application/json"<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 开始连接</span>
+<span style="color: #000000;">            urlConn.connect();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 发送请求参数</span>
+            DataOutputStream dos = <span style="color: #0000ff;">new</span><span style="color: #000000;"> DataOutputStream(urlConn.getOutputStream());
+            dos.write(postData);
+            dos.flush();
+            dos.close();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 判断请求是否成功</span>
+            <span style="color: #0000ff;">if</span> (urlConn.getResponseCode() == 200<span style="color: #000000;">) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取返回的数据</span>
+                String result =<span style="color: #000000;"> streamToString(urlConn.getInputStream());
+                Log.e(TAG, </span>"Post方式请求成功，result---&gt;" +<span style="color: #000000;"> result);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                Log.e(TAG, </span>"Post方式请求失败"<span style="color: #000000;">);
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 关闭连接</span>
+<span style="color: #000000;">            urlConn.disconnect();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            Log.e(TAG, e.toString());
+        }
+    }</span></pre>
+</div>
+<h4>处理网络流：将输入流转换成字符串</h4>
+<div class="cnblogs_code">
+<pre>    <span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 将输入流转换成字符串
+     *
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> is 从网络获取的输入流
+     * </span><span style="color: #808080;">@return</span>
+     <span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span><span style="color: #000000;"> String streamToString(InputStream is) {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            ByteArrayOutputStream baos </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> ByteArrayOutputStream();
+            </span><span style="color: #0000ff;">byte</span>[] buffer = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">byte</span>[1024<span style="color: #000000;">];
+            </span><span style="color: #0000ff;">int</span> len = 0<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">while</span> ((len = is.read(buffer)) != -1<span style="color: #000000;">) {
+                baos.write(buffer, </span>0<span style="color: #000000;">, len);
+            }
+            baos.close();
+            is.close();
+            </span><span style="color: #0000ff;">byte</span>[] byteArray =<span style="color: #000000;"> baos.toByteArray();
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> String(byteArray);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            Log.e(TAG, e.toString());
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        }
+    }</span></pre>
+</div>
+<p>&nbsp; &nbsp;以上就是HttpConnection的get、post的简单实现，如何实现文件的下载和上传呢？</p>
+<h4>文件下载：</h4>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> downloadFile(String fileUrl){
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 新建一个URL对象</span>
+            URL url = <span style="color: #0000ff;">new</span><span style="color: #000000;"> URL(fileUrl);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 打开一个HttpURLConnection连接</span>
+            HttpURLConnection urlConn =<span style="color: #000000;"> (HttpURLConnection) url.openConnection();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置连接主机超时时间</span>
+            urlConn.setConnectTimeout(5 * 1000<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">设置从主机读取数据超时</span>
+            urlConn.setReadTimeout(5 * 1000<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置是否使用缓存  默认是true</span>
+            urlConn.setUseCaches(<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置为Post请求</span>
+            urlConn.setRequestMethod("GET"<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">urlConn设置请求头信息
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">设置请求中的媒体类型信息。</span>
+            urlConn.setRequestProperty("Content-Type", "application/json"<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">设置客户端与服务连接类型</span>
+            urlConn.addRequestProperty("Connection", "Keep-Alive"<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 开始连接</span>
+<span style="color: #000000;">            urlConn.connect();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 判断请求是否成功</span>
+            <span style="color: #0000ff;">if</span> (urlConn.getResponseCode() == 200<span style="color: #000000;">) {
+                String filePath</span>=""<span style="color: #000000;">;
+                File  descFile </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> File(filePath);
+                FileOutputStream fos </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> FileOutputStream(descFile);;
+                </span><span style="color: #0000ff;">byte</span>[] buffer = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">byte</span>[1024<span style="color: #000000;">];
+                </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> len;
+                InputStream inputStream </span>=<span style="color: #000000;"> urlConn.getInputStream();
+                </span><span style="color: #0000ff;">while</span> ((len = inputStream.read(buffer)) != -1<span style="color: #000000;">) {
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 写到本地</span>
+                    fos.write(buffer, 0<span style="color: #000000;">, len);
+                }
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                Log.e(TAG, </span>"文件下载失败"<span style="color: #000000;">);
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 关闭连接</span>
+<span style="color: #000000;">            urlConn.disconnect();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            Log.e(TAG, e.toString());
+        }
+    }</span></pre>
+</div>
+<h4>文件上传：</h4>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span> upLoadFile(String filePath, HashMap&lt;String, String&gt;<span style="color: #000000;"> paramsMap) {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            String baseUrl </span>= "https://xxx.com/uploadFile"<span style="color: #000000;">;
+            File file </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> File(filePath);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">新建url对象</span>
+            URL url = <span style="color: #0000ff;">new</span><span style="color: #000000;"> URL(baseUrl);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">通过HttpURLConnection对象,向网络地址发送请求</span>
+            HttpURLConnection urlConn =<span style="color: #000000;"> (HttpURLConnection) url.openConnection();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">设置该连接允许读取</span>
+            urlConn.setDoOutput(<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">设置该连接允许写入</span>
+            urlConn.setDoInput(<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">设置不能适用缓存</span>
+            urlConn.setUseCaches(<span style="color: #0000ff;">false</span><span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">设置连接超时时间</span>
+            urlConn.setConnectTimeout(5 * 1000);   <span style="color: #008000;">//</span><span style="color: #008000;">设置连接超时时间
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">设置读取超时时间</span>
+            urlConn.setReadTimeout(5 * 1000);   <span style="color: #008000;">//</span><span style="color: #008000;">读取超时
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">设置连接方法post</span>
+            urlConn.setRequestMethod("POST"<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">设置维持长连接</span>
+            urlConn.setRequestProperty("connection", "Keep-Alive"<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">设置文件字符集</span>
+            urlConn.setRequestProperty("Accept-Charset", "UTF-8"<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">设置文件类型</span>
+            urlConn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + "*****"<span style="color: #000000;">);
+            String name </span>=<span style="color: #000000;"> file.getName();
+            DataOutputStream requestStream </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> DataOutputStream(urlConn.getOutputStream());
+            requestStream.writeBytes(</span>"--" + "*****" + "\r\n"<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">发送文件参数信息</span>
+            StringBuilder tempParams = <span style="color: #0000ff;">new</span><span style="color: #000000;"> StringBuilder();
+            tempParams.append(</span>"Content-Disposition: form-data; name=\"" + name + "\"; filename=\"" + name + "\"; "<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">int</span> pos = 0<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> size=<span style="color: #000000;">paramsMap.size();
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (String key : paramsMap.keySet()) {
+                tempParams.append( String.format(</span>"%s=\"%s\"", key, paramsMap.get(key), "utf-8"<span style="color: #000000;">));
+                </span><span style="color: #0000ff;">if</span> (pos &lt; size-1<span style="color: #000000;">) {
+                    tempParams.append(</span>"; "<span style="color: #000000;">);
+                }
+                pos</span>++<span style="color: #000000;">;
+            }
+            tempParams.append(</span>"\r\n"<span style="color: #000000;">);
+            tempParams.append(</span>"Content-Type: application/octet-stream\r\n"<span style="color: #000000;">);
+            tempParams.append(</span>"\r\n"<span style="color: #000000;">);
+            String params </span>=<span style="color: #000000;"> tempParams.toString();
+            requestStream.writeBytes(params);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">发送文件数据</span>
+            FileInputStream fileInput = <span style="color: #0000ff;">new</span><span style="color: #000000;"> FileInputStream(file);
+            </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> bytesRead;
+            </span><span style="color: #0000ff;">byte</span>[] buffer = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">byte</span>[1024<span style="color: #000000;">];
+            DataInputStream in </span>= <span style="color: #0000ff;">new</span> DataInputStream(<span style="color: #0000ff;">new</span><span style="color: #000000;"> FileInputStream(file));
+            </span><span style="color: #0000ff;">while</span> ((bytesRead = in.read(buffer)) != -1<span style="color: #000000;">) {
+                requestStream.write(buffer, </span>0<span style="color: #000000;">, bytesRead);
+            }
+            requestStream.writeBytes(</span>"\r\n"<span style="color: #000000;">);
+            requestStream.flush();
+            requestStream.writeBytes(</span>"--" + "*****" + "--" + "\r\n"<span style="color: #000000;">);
+            requestStream.flush();
+            fileInput.close();
+            </span><span style="color: #0000ff;">int</span> statusCode =<span style="color: #000000;"> urlConn.getResponseCode();
+            </span><span style="color: #0000ff;">if</span> (statusCode == 200<span style="color: #000000;">) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取返回的数据</span>
+                String result =<span style="color: #000000;"> streamToString(urlConn.getInputStream());
+                Log.e(TAG, </span>"上传成功，result---&gt;" +<span style="color: #000000;"> result);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                Log.e(TAG, </span>"上传失败"<span style="color: #000000;">);
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+            Log.e(TAG, e.toString());
+        }
+    }</span></pre>
+</div>
+<p>&nbsp;</p>
+<h4>权限：</h4>
+<div class="cnblogs_code">
+<pre>  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">uses-permission </span><span style="color: #ff0000;">android:name</span><span style="color: #0000ff;">="android.permission.INTERNET"</span><span style="color: #0000ff;">/&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>知识扩展：</p>
+<ul>
+<li>关于ResponseCode（http://univasity.iteye.com/blog/963433）<br /><br /></li>
+<li>关于&nbsp;Content-Type（http://blog.csdn.net/blueheart20/article/details/45174399）</li>
+
+
+</ul>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory"></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info">
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"></div>
+</div>
+
+
+		</div>
+		<div class = "postDesc">posted @ <span id="post-date">2016-05-23 16:13</span> <a href='http://www.cnblogs.com/whoislcj/'>总李写代码</a> 阅读(<span id="post_view_count">...</span>) 评论(<span id="post_comment_count">...</span>)  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=5520384" rel="nofollow">编辑</a> <a href="#" onclick="AddToWz(5520384);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=283786,cb_entryId=5520384,cb_blogApp=currentBlogApp,cb_blogUserGuid='66499144-2213-e611-9fc1-ac853d9f53cc',cb_entryCreatedDate='2016/5/23 16:13:00';loadViewCount(cb_entryId);</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id='comment_form' class='commentform'>
+<a name='commentform'></a>
+<div id='divCommentShow'></div>
+<div id='comment_nav'><span id='span_refresh_tips'></span><a href='javascript:void(0);' onclick='return RefreshCommentList();' id='lnk_RefreshComments' runat='server' clientidmode='Static'>刷新评论</a><a href='#' onclick='return RefreshPage();'>刷新页面</a><a href='#top'>返回顶部</a></div>
+<div id='comment_form_container'></div>
+<div class='ad_text_commentbox' id='ad_text_under_commentbox'></div>
+<div id='ad_t2'></div>
+<div id='opt_under_post'></div>
+<div id='ad_c1' class='c_ad_block'></div>
+<div id='under_post_news'></div>
+<div id='ad_c2' class='c_ad_block'></div>
+<div id='under_post_kb'></div>
+<div id='HistoryToday' class='c_ad_block'></div>
+<script type='text/javascript'>
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="calendar"><div id="blog-calendar" style="display:none"></div><script type="text/javascript">loadBlogDefaultCalendar();</script></div>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright &copy;2017 总李写代码
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+</body>
+</html>

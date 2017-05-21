@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/btn_load_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_load_img"/>
+        <Button
+            android:id="@+id/btn_img_rotate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_img_rotate"/>
+        <Button
+            android:id="@+id/btn_img_translation_x"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_img_translation_x"/>
+        <Button
+            android:id="@+id/btn_img_translation_y"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_img_translation_y"/>
+        <Button
+            android:id="@+id/btn_img_scale"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_img_scale"/>
+        <Button
+            android:id="@+id/btn_img_mirror_x"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_img_mirror_x"/>
+        <Button
+            android:id="@+id/btn_img_mirror_y"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_img_mirror_y"/>
+        <ImageView android:id="@+id/iv_src"
+                   android:layout_width="200dp"
+                   android:layout_height="200dp"
+                   android:scaleType="fitCenter"
+                   android:layout_gravity="left"
+                   android:src="@mipmap/ic_launcher"/>
+        <ImageView android:id="@+id/iv_target"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:scaleType="fitCenter"
+                   android:layout_gravity="left"
+                   android:src="@mipmap/ic_launcher"/>
+    </LinearLayout>
+</ScrollView>
