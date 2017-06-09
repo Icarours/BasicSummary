@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.syl.commonactivity.R;
 import com.syl.commonactivity.base.BaseFragment;
-import com.syl.commonactivity.data.Constants;
+import com.syl.commonactivity.config.Constants;
 import com.syl.commonactivity.utils.StringTool;
 
 import org.json.JSONArray;

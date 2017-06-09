@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.syl.basicsummary.interface_.INeiXian;
+
 /**
  * Created by j3767 on 2017/3/1.
  *
@@ -17,23 +19,23 @@ import android.widget.Toast;
 
 public class MyService extends Service {
     public static final String TAG = MyService.class.getSimpleName();
-    private MyBinder mMyBinder = new MyBinder();
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         Toast.makeText(this, "MyService---onBind()被调用---", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onBind() ----绑定服务");
-        return mMyBinder;
+        return new MyBinder();
     }
 
     @Override
     public void onCreate() {
         Toast.makeText(this, "MyService---onCreate()被调用---", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onCreate() ----创建服务");
+        //methodInService();
         super.onCreate();
 
-        new Thread(){
+       /* new Thread(){
             @Override
             public void run() {
                 while (true){
@@ -45,7 +47,7 @@ public class MyService extends Service {
                     methodInService();
                 }
             }
-        }.start();
+        }.start();*/
     }
 
     @Override
@@ -75,7 +77,9 @@ public class MyService extends Service {
      * desc
      * 必须使用public修饰符,否则外部无法调用
      */
-    public class MyBinder extends Binder {
+    class MyBinder extends Binder implements INeiXian{
+
+        @Override
         public void callMethodInService() {
             methodInService();
         }

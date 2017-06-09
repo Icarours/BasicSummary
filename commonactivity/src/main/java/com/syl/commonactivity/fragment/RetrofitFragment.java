@@ -8,7 +8,7 @@ import com.syl.commonactivity.R;
 import com.syl.commonactivity.base.BaseFragment;
 import com.syl.commonactivity.bean.DataBean;
 import com.syl.commonactivity.bean.IPBean;
-import com.syl.commonactivity.data.Constants;
+import com.syl.commonactivity.config.Constants;
 import com.syl.commonactivity.interface_.IPInterface;
 
 import retrofit2.Call;

@@ -1,4 +1,4 @@
-package com.syl.commonactivity.data;
+package com.syl.commonactivity.config;
 
 import com.syl.commonactivity.activity.BanzhengActivity;
 import com.syl.commonactivity.activity.DetailActivity;
@@ -107,7 +107,7 @@ public class Constants {
      * 文本地址
      */
     public class TXTURL {
-        public static final String TXTURL1 = Constants.BASEURL + "ymh.txt";
+        public static final String TXTURL1 = Constants.BASEURL + "text/ymh.txt";
     }
 
     /**
@@ -117,6 +117,6 @@ public class Constants {
      * 音乐地址/音频地址
      */
     public class MUSIC {
-        public static final String MUSIC1 = Constants.BASEURL + "qny.mp3";
+        public static final String MUSIC1 = Constants.BASEURL + "music/qny.mp3";
     }
 }

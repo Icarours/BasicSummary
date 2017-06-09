@@ -16,6 +16,7 @@ import android.webkit.WebView;
 import android.widget.Button;
 
 import com.syl.basicsummary.R;
+import com.syl.basicsummary.interface_.INeiXian;
 import com.syl.basicsummary.service.MyService;
 import com.syl.basicsummary.utils.WebUtil;
 
@@ -43,7 +44,7 @@ public class ServiceActivity extends AppCompatActivity {
     Button mBtnStopService;
     @BindView(R.id.webView)
     WebView mWebView;
-    private MyService.MyBinder mMyBinder;
+    private INeiXian mINeiXian;
     private MyConn mMyConn;
 
     @Override
@@ -115,7 +116,7 @@ public class ServiceActivity extends AppCompatActivity {
      */
     @OnClick(R.id.btn_call_in_service)
     public void btn_call_in_service(View view) {
-        mMyBinder.callMethodInService();
+        mINeiXian.callMethodInService();
     }
 
     /**
@@ -130,7 +131,7 @@ public class ServiceActivity extends AppCompatActivity {
          */
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            mMyBinder = (MyService.MyBinder) service;
+            mINeiXian = (INeiXian) service;
             Log.d(TAG, "服务成功绑定---" + service.toString());
         }
 
@@ -170,6 +171,5 @@ public class ServiceActivity extends AppCompatActivity {
         AssetManager assetManager = getResources().getAssets();
         String url = WebUtil.getFromAssets("serviceDemo.htm", assetManager);
         mWebView.loadDataWithBaseURL(null, url, "text/html", "utf-8", null);
-
     }
 }

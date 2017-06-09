@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.syl.commonactivity.R;
-import com.syl.commonactivity.data.Constants;
+import com.syl.commonactivity.config.Constants;
 
 import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.widget.MediaController;

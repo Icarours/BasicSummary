@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
  * author   Bright
  * date     2017/4/26 15:35
  * desc
- * 客户端支付界面
+ * 客户端支付界面(aidl远程支付,service)
  * <p>
  * com.syl.receviertest.service;对应的服务端接口
  */

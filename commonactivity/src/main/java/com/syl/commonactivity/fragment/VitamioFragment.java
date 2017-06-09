@@ -4,7 +4,7 @@ import android.view.View;
 
 import com.syl.commonactivity.R;
 import com.syl.commonactivity.base.BaseFragment;
-import com.syl.commonactivity.data.Constants;
+import com.syl.commonactivity.config.Constants;
 
 import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.widget.MediaController;

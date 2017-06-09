@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.syl.commonactivity.R;
 import com.syl.commonactivity.base.BaseActivity;
-import com.syl.commonactivity.data.Constants;
+import com.syl.commonactivity.config.Constants;
 import com.syl.commonactivity.factory.FragmentFactory;
 
 /**

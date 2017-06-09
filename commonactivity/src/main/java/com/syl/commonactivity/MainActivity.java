@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.syl.commonactivity.base.BaseActivity;
-import com.syl.commonactivity.data.Constants;
+import com.syl.commonactivity.config.Constants;
 
 /**
  * author   Bright
